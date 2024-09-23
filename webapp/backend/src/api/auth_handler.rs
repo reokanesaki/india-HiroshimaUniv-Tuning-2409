@@ -2,6 +2,11 @@ use crate::domains::auth_service::AuthService;
 use crate::domains::dto::auth::{LoginRequestDto, LogoutRequestDto, RegisterRequestDto};
 use crate::errors::AppError;
 use crate::repositories::auth_repository::AuthRepositoryImpl;
+
+//処理を追加
+//use futures::future::Future;
+
+
 //actix_webは、rustの非同期？フレームワーク
 use actix_web::{web, HttpResponse};
 //serdeは、構造体,列挙型とjson,ymlに変換するフレームワーク
@@ -58,6 +63,7 @@ pub async fn register_handler(
     }
 }
 
+
 pub async fn login_handler(
     service: web::Data<AuthService<AuthRepositoryImpl>>,
     req: web::Json<LoginRequestDto>,
@@ -77,6 +83,48 @@ pub async fn logout_handler(
         Err(_) => Ok(HttpResponse::Ok().finish()),
     }
 }
+
+
+//上の処理を改良
+
+
+/* 
+// 共通のハンドラー関数
+async fn handle_service_call<F, T>(
+    service_call: F,
+) -> Result<HttpResponse, AppError>
+where
+    F: Future<Output = Result<T, AppError>>,
+    T: serde::Serialize,  // JSONで返せるようにシリアライズを強制
+{
+    match service_call.await {
+        Ok(response) => Ok(HttpResponse::Ok().json(response)),
+        Err(err) => Err(err),
+    }
+}
+
+// ログインハンドラー
+pub async fn login_handler(
+    service: web::Data<AuthService<AuthRepositoryImpl>>,
+    req: web::Json<LoginRequestDto>,
+) -> Result<HttpResponse, AppError> {
+    handle_service_call(service.login_user(&req.username, &req.password)).await
+}
+
+// ログアウトハンドラー
+pub async fn logout_handler(
+    service: web::Data<AuthService<AuthRepositoryImpl>>,
+    req: web::Json<LogoutRequestDto>,
+) -> Result<HttpResponse, AppError> {
+    match service.logout_user(&req.session_token).await {
+        Ok(_) => Ok(HttpResponse::Ok().finish()),
+        Err(_) => Ok(HttpResponse::Ok().finish()), // エラーを握りつぶして常にOKを返す場合
+    }
+}
+
+
+//変更した処理終了
+*/
 
 #[derive(Deserialize, Debug)]
 pub struct UserProfileImageQueryParams {
