@@ -50,15 +50,15 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         let mut cors = Cors::default();
 
-        cors = cors
-            .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
-            .allowed_headers(vec![
-                actix_web::http::header::AUTHORIZATION,
-                actix_web::http::header::ACCEPT,
-            ])
-            .allowed_header(actix_web::http::header::CONTENT_TYPE)
-            .supports_credentials()
-            .max_age(3600);
+            cors = cors
+                .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
+                .allowed_headers(vec![
+                    actix_web::http::header::AUTHORIZATION,
+                    actix_web::http::header::ACCEPT,
+                ])
+                .allowed_header(actix_web::http::header::CONTENT_TYPE)
+                .supports_credentials()
+                .max_age(3600);
 
         App::new()
             .app_data(tow_truck_service.clone())
@@ -149,7 +149,7 @@ async fn main() -> std::io::Result<()> {
             )
     })
     .bind(format!("0.0.0.0:{port}"))?
-    .workers(1)
+    //.workers(1)
     .run()
     .await
 }
