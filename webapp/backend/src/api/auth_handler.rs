@@ -2,24 +2,38 @@ use crate::domains::auth_service::AuthService;
 use crate::domains::dto::auth::{LoginRequestDto, LogoutRequestDto, RegisterRequestDto};
 use crate::errors::AppError;
 use crate::repositories::auth_repository::AuthRepositoryImpl;
+//actix_webは、rustの非同期？フレームワーク
 use actix_web::{web, HttpResponse};
+//serdeは、構造体,列挙型とjson,ymlに変換するフレームワーク
 use serde::{Deserialize, Serialize};
 
+//deriveマクロの、Debugトレイト
+//Deserializeは、上のserdeのトレイト
+//structで構造体を定義
 #[derive(Deserialize, Debug)]
 pub struct ValidateSessionQueryParams {
     session_token: Option<String>,
-}
+}   
 
 #[derive(Serialize, Debug)]
 pub struct ValidationResponse {
     is_valid: bool,
 }
 
+//非同期の関数validate_session_handlerを宣言
 pub async fn validate_session_handler(
+    //web::Data<T>はactix-webの機能
+    //<AuthService<AuthRepositoryImpl>>ジェネリック型を連続して使用
     service: web::Data<AuthService<AuthRepositoryImpl>>,
     query: web::Query<ValidateSessionQueryParams>,
+    //以下のResultが成功したらHttpResponseを返す
+    //失敗したらAppErrorを返す
 ) -> Result<HttpResponse, AppError> {
+    //query.session_tokenがあれば(matchすれば)Someを実行
+    //無ければNoneを実行
+    //&query.session_tokenの&は、参照
     match &query.session_token {
+        //Some()は、Rustのオプション型
         Some(session_token) => match service.validate_session(session_token.as_str()).await {
             Ok(is_valid) => Ok(HttpResponse::Ok().json(ValidationResponse { is_valid })),
             Err(_) => Ok(HttpResponse::Ok().json(ValidationResponse { is_valid: false })),
@@ -28,12 +42,15 @@ pub async fn validate_session_handler(
     }
 }
 
+//userを登録
 pub async fn register_handler(
     service: web::Data<AuthService<AuthRepositoryImpl>>,
     req: web::Json<RegisterRequestDto>,
+    //->は、Result型の戻り値を返す
 ) -> Result<HttpResponse, AppError> {
     match service
         .register_user(&req.username, &req.password, &req.role, req.area_id)
+        //非同期処理で.registerの終了を待つ。
         .await
     {
         Ok(response) => Ok(HttpResponse::Created().json(response)),
