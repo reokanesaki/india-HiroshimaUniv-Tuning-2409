@@ -25,3 +25,7 @@ syn = "1"
 
 [dev-dependencies]
 actix-rt = "2.10.0"
+
+//最適化レベルを3にする。
+[profile.release]
+opt-level = 3
