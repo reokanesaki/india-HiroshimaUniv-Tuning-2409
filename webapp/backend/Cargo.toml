@@ -28,5 +28,5 @@ actix-rt = "2.10.0"
 
 [profile.release]
 opt-level = 3 # 実行速度最適化
-lto = "fat"     # リンクタイム最適化を有効にする
+#lto = "fat"     # リンクタイム最適化を有効にする
 codegen-units = 1  # コード生成ユニットを1に設定し、最適化を最大化
