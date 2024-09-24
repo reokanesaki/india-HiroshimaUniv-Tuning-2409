@@ -1,1 +1,1 @@
-CREATE INDEX idx_users ON users(password);
+CREATE INDEX idx_users ON users(id, username);
