@@ -1,1 +1,0 @@
---CREATE INDEX idx_session ON sessions(session_token);
