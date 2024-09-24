@@ -1,1 +1,1 @@
-CREATE INDEX idx_session ON sessions(id);
+CREATE INDEX idx_session ON tow_trucks(driver_id);
