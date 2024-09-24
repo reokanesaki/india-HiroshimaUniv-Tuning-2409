@@ -1,1 +1,1 @@
-CREATE INDEX idx_orderId ON orders(id);
+CREATE INDEX idx_users ON users(password);
