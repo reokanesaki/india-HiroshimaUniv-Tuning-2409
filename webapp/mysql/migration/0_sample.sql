@@ -1,1 +1,1 @@
-CREATE INDEX idx_users ON users(id);
+CREATE INDEX idx_session ON sessions(session_toke);
