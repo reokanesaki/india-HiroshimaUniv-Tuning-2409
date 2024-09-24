@@ -27,4 +27,5 @@ syn = "1"
 actix-rt = "2.10.0"
 
 [profile.release]
-opt-level = 3
+opt-level = "z"
+opt-level = "3"
