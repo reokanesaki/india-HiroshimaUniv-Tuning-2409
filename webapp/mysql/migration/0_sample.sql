@@ -1,1 +1,1 @@
-CREATE INDEX idx_tow_trucks ON tow_trucks(area_id);
+--CREATE INDEX idx_locations ON locations(tow_truck_id);
